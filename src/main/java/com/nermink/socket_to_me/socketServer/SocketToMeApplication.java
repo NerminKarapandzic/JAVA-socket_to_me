@@ -1,11 +1,8 @@
 package com.nermink.socket_to_me;
 
+import com.nermink.socket_to_me.socketServer.SocketServer;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-
-import java.io.PrintWriter;
-import java.net.ServerSocket;
-import java.net.Socket;
 
 @SpringBootApplication
 public class SocketToMeApplication {
@@ -14,23 +11,9 @@ public class SocketToMeApplication {
 
 		SpringApplication.run(SocketToMeApplication.class, args);
 
-		try {
-			ServerSocket socket = new ServerSocket(6969);
+		SocketServer socketServer = new SocketServer();
+		socketServer.initializeServer();
 
-			System.out.println("Server socket started at port 6969");
-
-			while (true){
-				Socket client = socket.accept();
-
-				PrintWriter pout = new PrintWriter(client.getOutputStream(), true);
-
-				pout.println("Hello from server");
-
-				client.close();
-			}
-		}catch (Exception e){
-			System.out.println("Failed to start server socket");
-		}
 	}
 
 }
