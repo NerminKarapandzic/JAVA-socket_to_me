@@ -5,6 +5,7 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.net.ServerSocket;
+import java.net.Socket;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -21,15 +22,17 @@ public class SocketServer {
 
             ExecutorService executorService = Executors.newFixedThreadPool(5);
 
-            executorService.execute(() -> {
-                while (true){
+            while (true){
+                var connection = socket.accept();
+
+                executorService.execute(() -> {
                     try {
-                        acceptConnection(socket);
+                        acceptConnection(connection);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                }
-            });
+                });
+            }
 
         }catch (Exception e){
             e.printStackTrace();
@@ -37,20 +40,19 @@ public class SocketServer {
         }
     }
 
-    private void acceptConnection(ServerSocket socket) throws IOException {
-        var client = socket.accept();
+    private void acceptConnection(Socket connection) throws IOException {
 
         String fileContent = readData();
         List<Person> data = gson.fromJson(fileContent, new TypeToken<List<Person>>(){}.getType());
 
         var response = createResponse(data);
 
-        PrintWriter pout = new PrintWriter(client.getOutputStream(), true);
+        PrintWriter pout = new PrintWriter(connection.getOutputStream(), true);
 
         //pout.println(String.format("THREAD %s - %s", Thread.currentThread().getName(), Thread.currentThread().getId()));
 
         pout.close();
-        client.close();
+        connection.close();
     }
 
     private String readData(){
