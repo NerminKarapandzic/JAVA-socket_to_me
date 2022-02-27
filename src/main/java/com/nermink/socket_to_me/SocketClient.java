@@ -10,7 +10,7 @@ import java.util.concurrent.Executors;
 
 public class SocketClient {
     public static void main(String[] args) {
-        int connections = 200;
+        int connections = 800;
 
         ExecutorService executorService = Executors.newFixedThreadPool(5);
 
@@ -26,17 +26,19 @@ public class SocketClient {
                 }
 
                 try (InputStream inputStream = socket.getInputStream()){
-                    BufferedReader socketInput  = new BufferedReader(new InputStreamReader(inputStream));
 
-                    String line;
-                    while(  (line = socketInput.readLine()) != null ){
-                        var endTime = System.currentTimeMillis();
-                        System.out.println(line + " " + (endTime - startTime));
+                    String input = new String(inputStream.readAllBytes());
+                    var endTime = System.currentTimeMillis();
 
-                        socketInput.close();
-                        socket.close();
-                    }
+                    String outputMsg = input.isEmpty()
+                            ? String.valueOf(endTime - startTime)
+                            : String.format("%s %s", input, (endTime - startTime));
+
+                    System.out.println(outputMsg);
+
+                    socket.close();
                 } catch (IOException e) {
+                    e.printStackTrace();
                 }
             });
         }

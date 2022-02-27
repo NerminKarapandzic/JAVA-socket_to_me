@@ -5,8 +5,6 @@ import com.google.gson.reflect.TypeToken;
 
 import java.io.*;
 import java.net.ServerSocket;
-import java.net.URISyntaxException;
-import java.nio.file.Paths;
 import java.util.List;
 
 public class SocketServer {
@@ -43,25 +41,14 @@ public class SocketServer {
 
     private String readData(){
 
-        File file = null;
+        InputStream in = SocketServer.class.getClassLoader().getResourceAsStream("static/data.json");
+
         try {
-            var uri = Paths.get(ClassLoader.getSystemResource("static/data.json").toURI()).toUri();
-            file = new File(uri);
-        } catch (URISyntaxException e) {
-            e.printStackTrace();
-        }
+            byte[] buffer = in.readAllBytes();
 
-        try(FileReader fileReader = new FileReader(file)){
-
-            char[] chars = new char[(int) file.length()];
-            fileReader.read(chars);
-
-            String fileContent = new String(chars);
-
+            String fileContent = new String(buffer);
+            in.close();
             return fileContent;
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-            return "[]";
         } catch (IOException e) {
             e.printStackTrace();
             return "[]";
