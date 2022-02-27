@@ -20,7 +20,7 @@ public class SocketClient {
                 var startTime = System.currentTimeMillis();
                 Socket socket = null;
                 try {
-                    socket = new Socket("159.89.102.139", 6969);
+                    socket = new Socket("127.0.0.1", 6969);
                 } catch (IOException e) {
                     e.printStackTrace();
                 }

@@ -6,6 +6,8 @@ import com.google.gson.reflect.TypeToken;
 import java.io.*;
 import java.net.ServerSocket;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SocketServer {
 
@@ -17,26 +19,39 @@ public class SocketServer {
 
             System.out.println("Server socket started at port 6969");
 
+            ExecutorService executorService = Executors.newFixedThreadPool(5);
+
             while (true){
-                var client = socket.accept();
+                executorService.execute(() -> {
+                    try {
+                        acceptConnection(socket);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                });
 
-                String fileContent = readData();
-                List<Person> data = gson.fromJson(fileContent, new TypeToken<List<Person>>(){}.getType());
-
-                var response = createResponse(data);
-
-                PrintWriter pout = new PrintWriter(client.getOutputStream(), true);
-
-                //pout.println(String.format("THREAD %s - %s", Thread.currentThread().getName(), Thread.currentThread().getId()));
-
-                pout.close();
-                client.close();
 
             }
         }catch (Exception e){
             e.printStackTrace();
             System.out.println("Failed to start server socket");
         }
+    }
+
+    private void acceptConnection(ServerSocket socket) throws IOException {
+        var client = socket.accept();
+
+        String fileContent = readData();
+        List<Person> data = gson.fromJson(fileContent, new TypeToken<List<Person>>(){}.getType());
+
+        var response = createResponse(data);
+
+        PrintWriter pout = new PrintWriter(client.getOutputStream(), true);
+
+        //pout.println(String.format("THREAD %s - %s", Thread.currentThread().getName(), Thread.currentThread().getId()));
+
+        pout.close();
+        client.close();
     }
 
     private String readData(){
