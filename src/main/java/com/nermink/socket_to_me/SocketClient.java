@@ -3,14 +3,13 @@ package com.nermink.socket_to_me;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SocketClient {
     public static void main(String[] args) {
-        int connections = 800;
+        int connections = 8000;
 
         ExecutorService executorService = Executors.newFixedThreadPool(5);
 

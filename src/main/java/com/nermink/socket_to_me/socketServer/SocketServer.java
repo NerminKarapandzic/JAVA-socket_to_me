@@ -21,17 +21,16 @@ public class SocketServer {
 
             ExecutorService executorService = Executors.newFixedThreadPool(5);
 
-            while (true){
-                executorService.execute(() -> {
+            executorService.execute(() -> {
+                while (true){
                     try {
                         acceptConnection(socket);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }
-                });
+                }
+            });
 
-
-            }
         }catch (Exception e){
             e.printStackTrace();
             System.out.println("Failed to start server socket");
