@@ -11,7 +11,7 @@ import java.util.concurrent.Executors;
 public class SocketServer {
 
 
-    ExecutorService executorService = Executors.newFixedThreadPool(6);
+    ExecutorService executorService = Executors.newFixedThreadPool(200);
     List<Socket> acceptedConnections = Collections.synchronizedList(new ArrayList<>());
     int connectionLimit = 200;
     int connectionCount = 0;

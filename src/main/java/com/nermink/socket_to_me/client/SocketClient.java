@@ -14,7 +14,7 @@ public class SocketClient {
     Map<Socket, String> socketPool = Collections.synchronizedMap(new HashMap<>());
 
     int connections = 200;
-    ExecutorService executorService = Executors.newCachedThreadPool();
+    ExecutorService executorService = Executors.newFixedThreadPool(6);
     long poolStartTime;
     int responseCount = 0;
 
