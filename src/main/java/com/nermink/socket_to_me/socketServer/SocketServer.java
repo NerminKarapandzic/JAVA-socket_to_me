@@ -6,8 +6,8 @@ import java.util.concurrent.Executors;
 
 public class SocketServer {
 
-
     ExecutorService executorService = Executors.newCachedThreadPool();
+
     public void initializeServer(){
         try {
             ServerSocket socket = new ServerSocket(6969);

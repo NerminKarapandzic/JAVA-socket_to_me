@@ -28,17 +28,25 @@ public class ClientHandler{
 
     private void processConnection(Socket connection) throws IOException {
 
-        String fileContent = readData();
-        List<Person> data = gson.fromJson(fileContent, new TypeToken<List<Person>>(){}.getType());
+        try (var input = connection.getInputStream()){
+            while (input.readAllBytes() != null){
+                String fileContent = readData();
+                List<Person> data = gson.fromJson(fileContent, new TypeToken<List<Person>>(){}.getType());
 
-        var response = createResponse(data);
+                var response = createResponse(data);
 
-        PrintWriter pout = new PrintWriter(connection.getOutputStream(), true);
+                PrintWriter pout = new PrintWriter(connection.getOutputStream(), true);
 
-        //pout.println(String.format("THREAD %s - %s", Thread.currentThread().getName(), Thread.currentThread().getId()));
+                //pout.println(String.format("THREAD %s - %s", Thread.currentThread().getName(), Thread.currentThread().getId()));
 
-        pout.close();
-        connection.close();
+                pout.close();
+                connection.close();
+            }
+        }catch (Exception e){
+            e.printStackTrace();
+        }
+
+
     }
 
     private String readData(){

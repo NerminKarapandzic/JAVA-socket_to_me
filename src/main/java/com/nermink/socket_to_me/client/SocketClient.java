@@ -39,7 +39,7 @@ public class SocketClient {
 
             SocketAddress address = new InetSocketAddress("159.89.102.139", 6969);
             try {
-                socket.connect(address, 30000);
+                socket.connect(address, 2 * 1000);
                 processConnection(socket);
             } catch (Exception e) {
                 e.printStackTrace();
@@ -76,6 +76,7 @@ public class SocketClient {
 
     private void recordResponse(String outputMsg){
         responseCount += 1;
+        System.out.println(responseCount);
 
         synchronized (responseArr){
             responseArr.add(outputMsg);
@@ -85,7 +86,7 @@ public class SocketClient {
             long poolEndTime = System.currentTimeMillis();
             long poolExecutionTime = poolEndTime - poolStartTime;
             System.out.println("Pool execution time "+ poolExecutionTime);
-            System.out.println(socketPool);
+            System.out.println(responseArr);
         }
     }
 }
