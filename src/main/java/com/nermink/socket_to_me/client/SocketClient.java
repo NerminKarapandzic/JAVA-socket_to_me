@@ -35,13 +35,13 @@ public class SocketClient {
     private void establishConnection(Socket socket){
         executorService.execute(() -> {
 
-            SocketAddress address = new InetSocketAddress("127.0.0.1", 6969);
+            SocketAddress address = new InetSocketAddress("159.89.102.139", 6969);
             try {
                 socket.connect(address, 2000);
 
                 processConnection(socket);
             } catch (Exception e) {
-
+                e.printStackTrace();
             }
 
         });

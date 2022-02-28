@@ -18,17 +18,27 @@ public class SocketServer {
             System.out.println("Server socket started at port 6969");
 
             while (true){
-                var connection = socket.accept();
-                acceptedConnections.add(connection);
-                connectionCount += 1;
-                System.out.println(connectionCount);
-                if(acceptedConnections.size() == connectionLimit){
-                    break;
+                try{
+                    var connection = socket.accept();
+
+                    acceptedConnections.add(connection);
+
+                    connectionCount += 1;
+                    System.out.println(connectionCount);
+
+                    if(acceptedConnections.size() == connectionLimit){
+                        break;
+                    }
+
+                    ClientHandler connectionHandler = new ClientHandler(connection);
+                    connectionHandler.start();
+                }catch (Exception e){
+                    System.out.println("Couldn't establish connection");
+                    e.printStackTrace();
                 }
 
-                ClientHandler connectionHandler = new ClientHandler(connection);
-                connectionHandler.start();
             }
+
             System.out.println(acceptedConnections);
 
         }catch (Exception e){
