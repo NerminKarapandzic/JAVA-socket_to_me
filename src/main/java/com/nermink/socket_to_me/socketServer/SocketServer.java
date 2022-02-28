@@ -5,9 +5,13 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 public class SocketServer {
 
+
+    ExecutorService executorService = Executors.newFixedThreadPool(6);
     List<Socket> acceptedConnections = Collections.synchronizedList(new ArrayList<>());
     int connectionLimit = 200;
     int connectionCount = 0;
@@ -31,7 +35,7 @@ public class SocketServer {
                     }
 
                     ClientHandler connectionHandler = new ClientHandler(connection);
-                    connectionHandler.start();
+                    executorService.execute(connectionHandler::run);
                 }catch (Exception e){
                     System.out.println("Couldn't establish connection");
                     e.printStackTrace();

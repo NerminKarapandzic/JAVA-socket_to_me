@@ -9,7 +9,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.List;
 
-public class ClientHandler extends Thread{
+public class ClientHandler{
 
     Gson gson = new Gson();
     Socket connection;
@@ -18,8 +18,7 @@ public class ClientHandler extends Thread{
         this.connection = socket;
     }
 
-    @Override
-    public void run() {
+    public void run(){
         try {
             processConnection(connection);
         } catch (IOException e) {
