@@ -1,20 +1,13 @@
 package com.nermink.socket_to_me.socketServer;
 
 import java.net.ServerSocket;
-import java.net.Socket;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class SocketServer {
 
 
-    ExecutorService executorService = Executors.newFixedThreadPool(200);
-    List<Socket> acceptedConnections = Collections.synchronizedList(new ArrayList<>());
-    int connectionLimit = 200;
-    int connectionCount = 0;
+    ExecutorService executorService = Executors.newCachedThreadPool();
     public void initializeServer(){
         try {
             ServerSocket socket = new ServerSocket(6969);
@@ -25,26 +18,13 @@ public class SocketServer {
                 try{
                     var connection = socket.accept();
 
-                    acceptedConnections.add(connection);
-
-                    connectionCount += 1;
-                    System.out.println(connectionCount);
-
-                    if(acceptedConnections.size() == connectionLimit){
-                        break;
-                    }
-
                     ClientHandler connectionHandler = new ClientHandler(connection);
                     executorService.execute(connectionHandler::run);
                 }catch (Exception e){
                     System.out.println("Couldn't establish connection");
                     e.printStackTrace();
                 }
-
             }
-
-            System.out.println(acceptedConnections);
-
         }catch (Exception e){
             e.printStackTrace();
             System.out.println("Failed to start server socket");
